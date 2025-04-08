@@ -1,17 +1,18 @@
-# Getting Started
+# RAFNAV Docker Setup & Usage
 
-## !! You need to be connected to WSL before proceeding
+## Development
 
-### Other Pre-requisites
+> !! You need to be connected to WSL before proceeding
+
+### Pre-requisites
 
 To get started, you must have set up an [IT Workspace environment](https://steed-finance.atlassian.net/wiki/x/CQCQBg).
-After that, clone this repo:
 
-## Introduction
+### Introduction
 
 You will be working in the ```./development``` folder a.k.a. a dev workspace. Follow the steps below to set up the workspace.
 
-## Workspace Setup
+### Workspace Setup
 
 1. Clone the Repo into your working directory
 
@@ -35,71 +36,23 @@ Run the following command in your working directory
 docker build -t rafnav_bench:latest ./images/rafnav_bench
 ```
 
-> You may change the tag to the relevant naming convention. However, you need to change the image used for development in the correct docker-compose file: ./.devcontainer/docker-compose.yml
+> You may change the tag to a more relevant naming convention. However, you need to change the image used for development in the correct docker-compose file: ./.devcontainer/docker-compose.yml
 
-## Container Initialization
+### Container Initialization
 
-You have two options to start the docker container for development:
+We will be attaching a VS Code window to the docker container workspace. This requires the [dev containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
-1. Opening the folder in VS as a docker container.
-2. Manually starting the container in the terminal.
-
-### Reopen the folder in the dev container
-
-1. Open VsCode in the RAFNAV-Docker folder.
+1. Open the RAFNAV-Docker folder with Vs Code.
 2. Open the command pallet with *ctrl + shift + p*  or  *View->Command Pallet*
 3. Run the command ```dev containers: Reopen in container```
 4. Wait for the container to warm up...
 
-### Manually start the container
+### GitHub Login (GitHub CLI)
 
-1. Run the following script
-
-```sh
-docker-compose -f .devcontainer/docker-compose.yml up -d && docker exec -e \"TERM=xterm-256color\" -w /workspace/development -it devcontainer-frappe-1 bash
-
-```
-#### Easier container start command
-
-Run the following script to install a command to start the default RAFNAV container easily.
-
-```sh
-echo "alias run-rafnav='cd ~/Documents/RAFNAV-Docker && docker-compose -f .devcontainer/docker-compose.yml up -d && docker exec -e \"TERM=xterm-256color\" -w /workspace/development -it devcontainer-frappe-1 bash'" >> ~/.bash_aliases
-```
-
-Now you can run ```run-rafnav``` anywhere in your WSL terminal to start the development container.
-
-> Note: Your **terminal** is now open in the development workspace. However, the VsCode **window** is not.
-
-## Starting Development
-
-### GitHub Login (SSH)
-
-> Make sure you're setting it up for WSL or Linux
-
-1. [Check for any existing SSH Key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/checking-for-existing-ssh-keys)
-2. [Generate an SSH Key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
-3. [Add it to your GitHub](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
-4. [Test your connection](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/testing-your-ssh-connection)
+- Make sure you have git and Github CLI installed on **windows**
+- Log in to GitHub from VsCode to sync your github credentials with GitHub
 
 ### RAFNAV Installation
-
-**‼️ If you're installing on Linux, run the following command first:**
-```sh
-chown frappe:frappe /workspace/development/
-```
-
-#### Default Install
-
-  ```sh
-  frap-install -v
-  ```
-
-#### ERPNext with add-on apps
-
-```sh
-  frap-install -j apps-erpnext.json -v
-```
 
 #### Development Branch Apps Install
 
@@ -113,27 +66,18 @@ chown frappe:frappe /workspace/development/
   frap-install -j apps-prod.json -v
   ```
 
-
 **Note: For additional args and configs run ```frap-install --help``` first.**
 
-2. cd into Rafnav's development bench
+2. cd into Rafnav's development bench. An alias has already been assigned. Run the following command:
 
 ```sh
-cd rafnav_bench
-```
-> Run the following script to add an alias for navigating to the RAFNAV bench.
-
-```sh
-echo "alias go-rafnav_bench='cd ~/Documents/RAFNAV-Docker/development/rafnav_bench'" >> ~/.bash_aliases
+go-rafnav_bench
 ```
 
-Now you can use ```go-rafnav_bench``` anywhere in linux to navigate to RAFNAV's bench directory.
-
-3. Now you are able to start development on RAFNAV with all the dependencies and the correct environment set-up.
-
-## Documentation
+1. Now you are able to start development on RAFNAV with all the dependencies and the correct environment set-up.
 
 ### Default Credentials
+
 MariaDB Root Password: 123
 > Unless changed in the docker or docker-compose file
 
@@ -142,8 +86,11 @@ First site's Administrator password: admin
 > Unless changed in the docker or docker-compose file
 
 ## Deployment
+
 ### Apps List
+
 1. Specify a list of apps in a JSON file called 'apps.json'
+
 ```json
 [
   {
@@ -168,31 +115,55 @@ First site's Administrator password: admin
   }
 ]
 ```
+
 >Note: {{PAT}} replace with your personal access token from GitHub
 
 2. Generate a Base 64 shell variable of the apps list. This will be passed as a build argument for the docker image later
+
 ```sh
-export APPS_JSON_BASE64=$(base64 -w 0 /path/to/apps.json)
+export APPS_JSON_BASE64=$(base64 -w 0 apps.json)
 ```
 
 ### Image Build
+
 Build the production version of the image using
-```sh 
-docker build --build-arg=APPS_JSON_BASE64=$APPS_JSON_BASE64 -t rafnav/rafnav_bench:[version] --file=images/production/Containerfile .
+
+```sh
+docker build --build-arg=APPS_JSON_BASE64=$APPS_JSON_BASE64 -t rafnav/rafnav_bench:prod --file=images/production/Containerfile .
 ```
-> Remeber to replace [version] with the correct version number
 
 ### Publish Image
+
 Publish the newly built docker image to docker hub using your PAT from Docker Hub
-1. Log in to Docker
+
+1. Log in to Docker if not already
+
 ```sh
 docker login -u [username]
 ```
+
 2. At the password prompt, paste your PAT
 3. Push the image using the following command:
+
 ```sh
-docker push rafnav/rafnav_bench:[version]
+docker push rafnav/rafnav_bench:prod
 ```
+
+## Common Operations
+
+### New Site
+
+```sh
+bench new-site [site_name] --mariadb-user-host-login-scope='%' --admin-password [pwd] --verbose
+```
+
+### Installing RAFNav
+
+```sh
+bench --site [site_name] install-app rafnav_core matter_management filing documentation raf_finance
+```
+
+## Resources
 
 ### [Production](#production)
 
