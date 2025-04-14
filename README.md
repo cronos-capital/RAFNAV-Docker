@@ -129,7 +129,7 @@ export APPS_JSON_BASE64=$(base64 -w 0 apps.json)
 Build the production version of the image using
 
 ```sh
-docker build --build-arg=APPS_JSON_BASE64=$APPS_JSON_BASE64 -t rafnav/rafnav_bench:prod --file=images/production/Containerfile .
+docker build --build-arg=APPS_JSON_BASE64=$APPS_JSON_BASE64 -t rafnav/rafnav_bench:prod --file=images/production/Containerfile . --no-cache
 ```
 
 ### Publish Image
