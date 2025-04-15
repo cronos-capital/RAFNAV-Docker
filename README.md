@@ -151,6 +151,26 @@ docker push rafnav/rafnav_bench:prod
 
 ## Common Operations
 
+### Updating on a VPS Server (Prod)
+
+```sh
+docker compose -f rafnav-compose.yml up -d --force-recreate
+```
+
+#### Deployment Issues
+
+If css does not want to load for desk, the containers need to be recreated, hence the --force-recreate flag. However a working fallback is:
+
+```sh
+docker compose -f rafnav-compose.yml down
+```
+
+> Wait until the containers are shut down and removed
+
+```sh
+docker compose -f rafnav-compose.yml up -d --force-recreate
+```
+
 ### New Site
 
 ```sh
@@ -161,6 +181,12 @@ bench new-site [site_name] --mariadb-user-host-login-scope='%' --admin-password 
 
 ```sh
 bench --site [site_name] install-app rafnav_core matter_management filing documentation raf_finance
+```
+
+### Migrations
+
+```sh
+bench -site all migrate
 ```
 
 ## Resources
