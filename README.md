@@ -208,7 +208,7 @@ bench --site [site_name] install-app rafnav_core matter_management filing docume
 ### Migrations
 
 ```sh
-bench -site all migrate
+bench --site all migrate
 ```
 
 ## Resources
