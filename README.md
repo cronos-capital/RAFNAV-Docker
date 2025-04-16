@@ -211,6 +211,20 @@ bench --site [site_name] install-app rafnav_core matter_management filing docume
 bench --site all migrate
 ```
 
+### Enable Scheduler
+
+#### Specific Site
+
+```sh
+bench --site [site] enable-scheduler
+```
+
+#### All Sites
+
+```sh
+bench --site all enable-scheduler
+```
+
 ## Resources
 
 ### [Production](#production)
