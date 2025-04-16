@@ -163,6 +163,11 @@ Sign out all users after an update
 
 ```sh
 docker exec -it rafnav-backend-1 bash
+```
+
+Then inside the container
+
+```sh
 bench --site all destroy-all-sessions
 ```
 
