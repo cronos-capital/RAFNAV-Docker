@@ -153,9 +153,19 @@ docker push rafnav/rafnav_bench:prod
 
 ### Updating on a VPS Server (Prod)
 
+Recreate the containers using the following command:
+
 ```sh
 docker compose -f rafnav-compose.yml up -d --force-recreate
 ```
+
+Sign out all users after an update
+
+```sh
+docker exec -it rafnav-backend-1 bash
+bench --site all destroy-all-sessions
+```
+
 
 #### Deployment Issues
 
@@ -170,6 +180,13 @@ docker compose -f rafnav-compose.yml down
 ```sh
 docker compose -f rafnav-compose.yml up -d --force-recreate
 ```
+
+### Interactive terminal for RAFNav bench
+
+```sh
+docker exec -it rafnav-backend-1 bash
+```
+
 
 ### New Site
 
