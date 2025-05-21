@@ -159,17 +159,9 @@ Recreate the containers using the following command:
 docker compose -f rafnav-compose.yml up -d --force-recreate
 ```
 
-Sign out all users after an update
-
-```sh
-docker exec -it rafnav-backend-1 bash
-bench --site all destroy-all-sessions
-```
-
-
 #### Deployment Issues
 
-If css does not want to load for desk, the containers need to be recreated, hence the --force-recreate flag. However a working fallback is:
+If you notice certain updates do not take  or css does not want to load for desk, the containers need to be recreated, hence the --force-recreate flag. However, sometime removing the containers and then restarting them works better.
 
 ```sh
 docker compose -f rafnav-compose.yml down
@@ -179,6 +171,15 @@ docker compose -f rafnav-compose.yml down
 
 ```sh
 docker compose -f rafnav-compose.yml up -d --force-recreate
+```
+
+#### CSRF Issues
+
+Sign out all users on all sites. Forcing users to relogin is good for security but also resolves CSRF issues especially after an update.
+
+```sh
+docker exec -it rafnav-backend-1 bash
+bench --site all destroy-all-sessions
 ```
 
 ### Interactive terminal for RAFNav bench
