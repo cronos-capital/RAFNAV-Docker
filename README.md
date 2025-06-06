@@ -10,7 +10,7 @@ To get started, you must have set up an [IT Workspace environment](https://steed
 
 ### Introduction
 
-You will be working in the ```./development``` folder a.k.a. a dev workspace. Follow the steps below to set up the workspace.
+You will be working in the `./development` folder a.k.a. a dev workspace. Follow the steps below to set up the workspace.
 
 ### Workspace Setup
 
@@ -43,8 +43,8 @@ docker build -t rafnav_bench:latest ./images/rafnav_bench
 We will be attaching a VS Code window to the docker container workspace. This requires the [dev containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
 1. Open the RAFNAV-Docker folder with Vs Code.
-2. Open the command pallet with *ctrl + shift + p*  or  *View->Command Pallet*
-3. Run the command ```dev containers: Reopen in container```
+2. Open the command pallet with _ctrl + shift + p_ or _View->Command Pallet_
+3. Run the command `dev containers: Reopen in container`
 4. Wait for the container to warm up...
 
 ### GitHub Login (GitHub CLI)
@@ -62,11 +62,11 @@ We will be attaching a VS Code window to the docker container workspace. This re
 
 #### Prod Apps Install
 
- ```sh
-  frap-install -j apps-prod.json -v
-  ```
+```sh
+ frap-install -j apps-prod.json -v
+```
 
-**Note: For additional args and configs run ```frap-install --help``` first.**
+**Note: For additional args and configs run `frap-install --help` first.**
 
 2. cd into Rafnav's development bench. An alias has already been assigned. Run the following command:
 
@@ -79,6 +79,7 @@ go-rafnav_bench
 ### Default Credentials
 
 MariaDB Root Password: 123
+
 > Unless changed in the docker or docker-compose file
 
 First site's Administrator password: admin
@@ -116,7 +117,7 @@ First site's Administrator password: admin
 ]
 ```
 
->Note: {{PAT}} replace with your personal access token from GitHub
+> Note: {{PAT}} replace with your personal access token from GitHub
 
 2. Generate a Base 64 shell variable of the apps list. This will be passed as a build argument for the docker image later
 
@@ -153,15 +154,7 @@ docker push rafnav/rafnav_bench:prod
 
 ### Updating on a VPS Server (Prod)
 
-Recreate the containers using the following command:
-
-```sh
-docker compose -f rafnav-compose.yml up -d --force-recreate
-```
-
-#### Deployment Issues
-
-If you notice certain updates do not take  or css does not want to load for desk, the containers need to be recreated, hence the --force-recreate flag. However, sometime removing the containers and then restarting them works better.
+1. Shut down the exisitng containers:
 
 ```sh
 docker compose -f rafnav-compose.yml down
@@ -169,9 +162,24 @@ docker compose -f rafnav-compose.yml down
 
 > Wait until the containers are shut down and removed
 
+2. Recreate the containers. This will pull the new image.
+
 ```sh
 docker compose -f rafnav-compose.yml up -d --force-recreate
 ```
+
+> Note: Not shutting the containers down first may result in broken static files such as css & js. \
+> See: <https://github.com/frappe/frappe_docker/wiki/Frequently-Asked-Questions#how-to-update>
+
+3. Prune docker
+
+```sh
+docker system prune
+```
+
+## Frappe Docker FAQ
+
+<https://github.com/frappe/frappe_docker/wiki/Frequently-Asked-Questions#how-to-build-assets>
 
 #### CSRF Issues
 
@@ -187,7 +195,6 @@ bench --site all destroy-all-sessions
 ```sh
 docker exec -it rafnav-backend-1 bash
 ```
-
 
 ### New Site
 
