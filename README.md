@@ -171,6 +171,7 @@ docker compose -f rafnav-compose.yml up -d --force-recreate
 > Note: Not shutting the containers down first may result in broken static files such as css & js. \
 > See: <https://github.com/frappe/frappe_docker/wiki/Frequently-Asked-Questions#how-to-update>
 
+⚠️!! Only run prune while Docker Compose is running. Do not prune when production is down. \
 3. Prune docker
 
 ```sh
